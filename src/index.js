@@ -1,7 +1,7 @@
 import createError from 'http-errors'
 import express from 'express'
-import indexRouter from 'indexRouter'
-import usersRouter from 'usersRouter'
+import indexRouter from './routes/index'
+import usersRouter from './routes/index'
 import serverConfig from './serverconfig'
 
 const app = express()

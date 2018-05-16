@@ -8,17 +8,6 @@ router.get('/', function (req, res) {
   res.send({ title: 'Express' })
 })
 
-router.get('/verify', jwtcheckr)
-
-const jwtverifyPromise = token => new Promise((resolve, reject) => {
-  jwt.verify(token, publicKey, { algorithms: ['HS256'] }, function (err, decoded) {
-    if (err) {
-      reject(err)
-      return
-    }
-    resolve(decoded)
-  })
-})
 
 const jwtcheckr = async (req, res) => {
   if (!req.headers['authorization']) {
@@ -30,5 +19,17 @@ const jwtcheckr = async (req, res) => {
     res.send(res, 403, ({ 'boo': 'Authentication Failed' }))
   }
 }
+
+router.get('/verify', jwtcheckr)
+
+const jwtverifyPromise = token => new Promise((resolve, reject) => {
+  jwt.verify(token, publicKey, { algorithms: ['HS256'] }, function (err, decoded) {
+    if (err) {
+      reject(err)
+      return
+    }
+    resolve(decoded)
+  })
+})
 
 export default router
