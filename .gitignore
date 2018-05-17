@@ -62,3 +62,6 @@ typings/
 
 # shhhhhh
 secrets.js
+
+# Mongo Credentials
+src/config.js

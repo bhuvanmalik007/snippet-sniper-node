@@ -10,6 +10,8 @@
     "deploy": "node scripts/deploy.js"
   },
   "dependencies": {
+    "@elementary/pointfree": "^0.1.0",
+    "@elementary/proper": "^0.2.2",
     "@lectro/enhancer-commonutils": "^1.1.2-alpha-7",
     "cookie-parser": "1.4.3",
     "cross-env": "^5.1.5",

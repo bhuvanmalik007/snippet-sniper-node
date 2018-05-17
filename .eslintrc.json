@@ -23,5 +23,8 @@
             "error",
             "never"
         ]
+    },
+    "globals": {
+      "Transformer": true
     }
 }

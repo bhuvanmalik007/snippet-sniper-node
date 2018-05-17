@@ -1,10 +1,26 @@
 import mongoose from 'mongoose'
+import { map } from '@elementary/proper'
 
-const Schema = mongoose.Schema
+class Schema extends Transformer {
+  constructor(object) {
+    super()
+    this.schemaObject = object
+  }
 
-const userSchema = new Schema({
+  fold() {
+    const MSchema = mongoose.Schema
+    return mongoose.model('userModel', new MSchema(this.object))
+  }
+
+  concat(newKeys) {
+    return { ...this.schemaObject, ...newKeys }
+  }
+
+  map(fn){
+    return map(this.schemaObject, fn)
+  }
+}
+
+export default Schema(({
   id: String
-})
-
-
-export default mongoose.model('userModel',userSchema )
+}))
