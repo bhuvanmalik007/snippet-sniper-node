@@ -96,7 +96,7 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
-  mongo: 'mongodb://bhuvanmalik007:bhuvan007@ds125680.mlab.com:25680/snippetsniper'
+  mongo: 'mongodb://root:admin@ds125680.mlab.com:25680/snippetsniper'
 });
 
 /***/ }),
@@ -135,7 +135,8 @@ app.use(express__WEBPACK_IMPORTED_MODULE_1___default.a.urlencoded({
 app.use(function (req, res, next) {
   next(http_errors__WEBPACK_IMPORTED_MODULE_0___default()(404));
 });
-Object(_elementary_proper__WEBPACK_IMPORTED_MODULE_5__["binder"])().add(_utils_attachAppWithMongoose__WEBPACK_IMPORTED_MODULE_4__["default"]).add(x => x).invoke(app) // fold
+Object(_elementary_proper__WEBPACK_IMPORTED_MODULE_5__["binder"])().add(_utils_attachAppWithMongoose__WEBPACK_IMPORTED_MODULE_4__["default"]).add(x => x) // do anything here
+.invoke(app) // fold
 .use('/', _routes_index__WEBPACK_IMPORTED_MODULE_2__["default"]).use('/users', _routes_index__WEBPACK_IMPORTED_MODULE_2__["default"]); // error handler
 
 app.use(function (err, req, res) {
@@ -245,21 +246,16 @@ const config = {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var mongoose__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! mongoose */ "mongoose");
 /* harmony import */ var mongoose__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(mongoose__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _elementary_pointfree__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @elementary/pointfree */ "@elementary/pointfree");
-/* harmony import */ var _elementary_pointfree__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_elementary_pointfree__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../config */ "./src/config.js");
-
+/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../config */ "./src/config.js");
 
 
 mongoose__WEBPACK_IMPORTED_MODULE_0___default.a.Promise = global.Promise;
 /* harmony default export */ __webpack_exports__["default"] = (app => {
-  console.log(_config__WEBPACK_IMPORTED_MODULE_2__["default"].mongo);
+  console.log(_config__WEBPACK_IMPORTED_MODULE_1__["default"].mongo);
 
-  app.connectThenListen = (port, errorCb) => {
-    var _mongoose$connect;
-
-    return _mongoose$connect = mongoose__WEBPACK_IMPORTED_MODULE_0___default.a.connect(_config__WEBPACK_IMPORTED_MODULE_2__["default"].mongo), Object(_elementary_pointfree__WEBPACK_IMPORTED_MODULE_1__["then"])(() => app.listen(port, errorCb))(_mongoose$connect);
-  };
+  app.connectThenListen = async (port, errorCb) => await mongoose__WEBPACK_IMPORTED_MODULE_0___default.a.connect(_config__WEBPACK_IMPORTED_MODULE_1__["default"].mongo).then(() => {
+    app.listen(port, errorCb);
+  }).catch(e => console.log(e));
 
   return app;
 });
@@ -275,17 +271,6 @@ mongoose__WEBPACK_IMPORTED_MODULE_0___default.a.Promise = global.Promise;
 
 module.exports = __webpack_require__(/*! /Users/bhuvanmalik/Desktop/node/snippet-sniper-node/src/index.js */"./src/index.js");
 
-
-/***/ }),
-
-/***/ "@elementary/pointfree":
-/*!****************************************!*\
-  !*** external "@elementary/pointfree" ***!
-  \****************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = require("@elementary/pointfree");
 
 /***/ }),
 
