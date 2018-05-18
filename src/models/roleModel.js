@@ -21,6 +21,4 @@ class Schema extends Transformer {
   }
 }
 
-export default Schema(({
-  id: String
-}))
+export default Schema

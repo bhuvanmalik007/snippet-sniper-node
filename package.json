@@ -7,7 +7,8 @@
     "build": "cross-env NODE_ENV=production node scripts/build.js",
     "start:prod": "node build/main.js",
     "heroku": "node index.js",
-    "deploy": "node scripts/deploy.js"
+    "deploy": "node scripts/deploy.js",
+    "auto": "git add . && git commit -mAUTOCOMMIT && git push origin master"
   },
   "dependencies": {
     "@elementary/pointfree": "^0.1.0",
