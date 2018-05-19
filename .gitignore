@@ -67,4 +67,4 @@ secrets.js
 src/config.js
 
 # Build folder for heroku deployment
-build
+build/
