@@ -65,3 +65,6 @@ secrets.js
 
 # Mongo Credentials
 src/config.js
+
+# Build folder for heroku deployment
+build
