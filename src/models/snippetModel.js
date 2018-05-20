@@ -8,3 +8,5 @@ const snippetModel = new Schema({
   annotations: Array,
   dateCreated: Date
 }, { timestamps: true })
+
+export default snippetModel
