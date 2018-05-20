@@ -1,6 +1,17 @@
 import mongoose from 'mongoose'
 import { map } from '@elementary/proper'
 
+const roleModel = (modelObject, modelName) => ({
+  fold: () => {
+    const MSchema = mongoose.Schema
+    return mongoose.model(modelName, new MSchema(modelObject))
+  },
+  concat: newKeys => {
+    return { ...modelObject, ...newKeys }
+  },
+  map: fn =>  map(modelObject, fn)
+})
+
 class Schema extends Transformer {
   constructor(object) {
     super()
@@ -21,4 +32,4 @@ class Schema extends Transformer {
   }
 }
 
-export default Schema
+export default roleModel

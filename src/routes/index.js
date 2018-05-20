@@ -11,20 +11,23 @@ router.get('/', function (req, res) {
 
 const jwtcheckr = async (req, res) => {
   if (!req.headers['authorization']) {
-    res.send(res, 403, ({ 'boo': 'No Token' }))
+    res.send({ 'boo': 'No Token' })
   }
   try {
     await jwtverifyPromise(req.headers['authorization'].split(' ')[1])
+    res.send({ authenticated: true })
   } catch (e) {
-    res.send(res, 403, ({ 'boo': 'Authentication Failed' }))
+    console.log(e)
+    res.send({ 'boo': 'Authentication Failed' })
   }
 }
 
 router.get('/verify', jwtcheckr)
 
 const jwtverifyPromise = token => new Promise((resolve, reject) => {
-  jwt.verify(token, publicKey, { algorithms: ['HS256'] }, function (err, decoded) {
+  jwt.verify(token, publicKey.default, { algorithms: ['HS256'] }, function (err, decoded) {
     if (err) {
+      console.log(err)
       reject(err)
       return
     }

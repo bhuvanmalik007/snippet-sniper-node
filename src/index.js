@@ -1,7 +1,6 @@
 import createError from 'http-errors'
 import express from 'express'
 import indexRouter from './routes/index'
-import usersRouter from './routes/index'
 import serverConfig from './serverconfig'
 import attachAppWithMongoose from './utils/attachAppWithMongoose'
 
@@ -12,17 +11,16 @@ const app = express()
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 
-// catch 404 and forward to error handler
-app.use(function (req, res, next) {
-  next(createError(404))
-})
-
 binder()
   .add(attachAppWithMongoose)
   .add(x => x) // do anything here
   .invoke(app) // fold
   .use('/', indexRouter)
-  .use('/users', usersRouter)
+
+// catch 404 and forward to error handler
+app.use(function (req, res, next) {
+  next(createError(404))
+})
 
 // error handler
 app.use(function (err, req, res) {
