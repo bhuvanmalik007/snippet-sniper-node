@@ -1,12 +1,11 @@
-import mongoose from 'mongoose'
-
-const Schema = mongoose.Schema
-
-const snippetModel = new Schema({
+const snippetObj = {
   fileName: String,
   extension: String,
+  code: String,
   annotations: Array,
   dateCreated: Date
-}, { timestamps: true })
+}
 
-export default snippetModel
+export default snippetObj
+
+

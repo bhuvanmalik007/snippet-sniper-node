@@ -165,6 +165,10 @@
   version "7.0.0-beta.46"
   resolved "https://registry.yarnpkg.com/@babel/helper-plugin-utils/-/helper-plugin-utils-7.0.0-beta.46.tgz#f630adbd9d645d0ba2e43f4955b4ad61f44ccdf4"
 
+"@babel/helper-plugin-utils@7.0.0-beta.49":
+  version "7.0.0-beta.49"
+  resolved "https://registry.yarnpkg.com/@babel/helper-plugin-utils/-/helper-plugin-utils-7.0.0-beta.49.tgz#0e9fcbb834f878bb365d2a8ea90eee21ba3ccd23"
+
 "@babel/helper-regex@7.0.0-beta.46":
   version "7.0.0-beta.46"
   resolved "https://registry.yarnpkg.com/@babel/helper-regex/-/helper-regex-7.0.0-beta.46.tgz#df3675cec700e062d823225c52830e012f32308f"
@@ -307,6 +311,12 @@
   resolved "https://registry.yarnpkg.com/@babel/plugin-syntax-class-properties/-/plugin-syntax-class-properties-7.0.0-beta.46.tgz#dad4df6c31b65ba359fec3b02fb8413896e75efc"
   dependencies:
     "@babel/helper-plugin-utils" "7.0.0-beta.46"
+
+"@babel/plugin-syntax-dynamic-import@^7.0.0-beta.47":
+  version "7.0.0-beta.49"
+  resolved "https://registry.yarnpkg.com/@babel/plugin-syntax-dynamic-import/-/plugin-syntax-dynamic-import-7.0.0-beta.49.tgz#f0af7ac6b53676a496093d4a6e2a2ec655c07b78"
+  dependencies:
+    "@babel/helper-plugin-utils" "7.0.0-beta.49"
 
 "@babel/plugin-syntax-jsx@7.0.0-beta.46":
   version "7.0.0-beta.46"
@@ -701,15 +711,16 @@
   dependencies:
     "@elementary/core" "^0.1.4"
 
-"@lectro/babel-preset-lectro@1.1.2-alpha-5":
-  version "1.1.2-alpha-5"
-  resolved "https://registry.yarnpkg.com/@lectro/babel-preset-lectro/-/babel-preset-lectro-1.1.2-alpha-5.tgz#e2b5adc3d747432011f3fac4e58df3565bdf9efb"
+"@lectro/babel-preset-lectro@1.1.2-alpha-7":
+  version "1.1.2-alpha-7"
+  resolved "https://registry.yarnpkg.com/@lectro/babel-preset-lectro/-/babel-preset-lectro-1.1.2-alpha-7.tgz#306bab997ad4591b432a56e65583a47b1826cb08"
   dependencies:
     "@babel/core" "^7.0.0-beta.37"
     "@babel/plugin-proposal-class-properties" "^7.0.0-beta.37"
     "@babel/plugin-proposal-object-rest-spread" "^7.0.0-beta.37"
     "@babel/plugin-proposal-optional-chaining" "^7.0.0-beta.46"
     "@babel/plugin-proposal-pipeline-operator" "^7.0.0-beta.46"
+    "@babel/plugin-syntax-dynamic-import" "^7.0.0-beta.47"
     "@babel/plugin-transform-modules-commonjs" "^7.0.0-beta.37"
     "@babel/plugin-transform-parameters" "^7.0.0-beta.37"
     "@babel/plugin-transform-regenerator" "^7.0.0-beta.37"
@@ -718,13 +729,14 @@
     "@babel/preset-react" "^7.0.0-beta.46"
     "@babel/runtime" "^7.0.0-beta.37"
     babel-loader "8.0.0-beta.0"
+    babel-plugin-implicit-function "^0.1.1"
 
-"@lectro/core@1.1.2-alpha-8":
-  version "1.1.2-alpha-8"
-  resolved "https://registry.yarnpkg.com/@lectro/core/-/core-1.1.2-alpha-8.tgz#5512137d6b535bca4fd9e7bef05b7794cd4a05df"
+"@lectro/core@^1.1.2-alpha-9":
+  version "1.1.2-alpha-9"
+  resolved "https://registry.yarnpkg.com/@lectro/core/-/core-1.1.2-alpha-9.tgz#ac0bd852b6d212d948f3927d902da2a71ec573e1"
   dependencies:
     "@babel/core" "^7.0.0-beta.46"
-    "@lectro/babel-preset-lectro" "1.1.2-alpha-5"
+    "@lectro/babel-preset-lectro" "1.1.2-alpha-7"
     babel-core "^7.0.0-bridge.0"
     babel-loader "8.0.0-beta.0"
     cross-spawn "^5.0.1"
@@ -1144,6 +1156,10 @@ babel-loader@8.0.0-beta.0:
     find-cache-dir "^1.0.0"
     loader-utils "^1.0.2"
     mkdirp "^0.5.1"
+
+babel-plugin-implicit-function@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/babel-plugin-implicit-function/-/babel-plugin-implicit-function-0.1.1.tgz#979301e583ac04bb61485da6e648335ef6950bc3"
 
 babylon@7.0.0-beta.44:
   version "7.0.0-beta.44"

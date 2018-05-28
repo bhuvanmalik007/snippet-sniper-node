@@ -2,9 +2,9 @@ import mongoose from 'mongoose'
 import { map } from '@elementary/proper'
 
 const roleModel = (modelObject, modelName) => ({
-  fold: () => {
+  fold: timeStamp => {
     const MSchema = mongoose.Schema
-    return mongoose.model(modelName, new MSchema(modelObject))
+    return mongoose.model(modelName, new MSchema(modelObject, {timeStamp}))
   },
   concat: newKeys => {
     return { ...modelObject, ...newKeys }
