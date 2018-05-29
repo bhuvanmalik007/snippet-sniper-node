@@ -1,6 +1,5 @@
 import express from 'express'
 import roleModel from '../models/roleModel'
-// import snippet from '../models/snippetModel'
 
 const router = express.Router()
 
@@ -8,18 +7,24 @@ const router = express.Router()
 
 function Resolver(model) {
   return {
-    _get: (req, res) => model.findById(req.id, function (err, item) {
+    _findById: (req, res) => model.findById(req.id, function (err, item) {
       res.send(item)
-    })
-    // _save: async () => await .
+    }),
+    _save: (req, res) => {
+      const item = new model(req.body.payload)
+      item.save()
+      res.send(item)
+    }
+
   }
 }
 
 ['snippet'].map(
-  x => {
-    // console.log(roleModel(require('../models/' + x + 'Model.js'), x).fold(true))
-    return router.get(x, Resolver(roleModel(require('../models/' + x + 'Model.js'), x).fold(true))._get)
-  }
+  x => router.get(x, Resolver(roleModel(require('../models/' + x + 'Model.js'), x).fold(true))._findById)
+)
+
+['snippet'].map(
+  x => router.post(x, Resolver(roleModel(require('../models/' + x + 'Model.js'), x).fold(true))._save)
 )
 
 console.log(router)
