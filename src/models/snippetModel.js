@@ -1,11 +1,14 @@
+import roleModel from './roleModel'
+
 const snippetObj = {
   fileName: String,
   extension: String,
   code: String,
-  annotations: Array,
-  dateCreated: Date
+  annotations: [String],
+  colorCode: String,
+  starred: Boolean
 }
 
-export default snippetObj
+export default roleModel(snippetObj, 'snippet').fold()
 
 

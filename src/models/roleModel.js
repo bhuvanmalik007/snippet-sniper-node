@@ -1,15 +1,16 @@
 import mongoose from 'mongoose'
 import { map } from '@elementary/proper'
 
+const MSchema = mongoose.Schema
+
 const roleModel = (modelObject, modelName) => ({
-  fold: timeStamp => {
-    const MSchema = mongoose.Schema
-    return mongoose.model(modelName, new MSchema(modelObject, {timeStamp}))
+  fold: () => {
+    return mongoose.model(modelName, new MSchema(modelObject, { timestamps: true }))
   },
   concat: newKeys => {
     return { ...modelObject, ...newKeys }
   },
-  map: fn =>  map(modelObject, fn)
+  map: fn => map(modelObject, fn)
 })
 
 // class Schema extends Transformer {
