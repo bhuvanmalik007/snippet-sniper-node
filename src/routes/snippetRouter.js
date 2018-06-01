@@ -4,7 +4,7 @@ import { xprod, omit } from 'ramda'
 const router = express.Router()
 
 const routeNames = ['/snippet/(:id)?']
-const httpVerbs = ['get', 'put', 'post']
+const httpVerbs = ['get', 'put', 'post', 'delete']
 // const bodyVerbs = ['post']
 
 // const importer = async (modelName) => await import(`../models/${modelName}`)
@@ -27,6 +27,12 @@ function Resolver(model) {
           console.log(item)
           res.send(item)
         })
+        .catch(res.send)
+    },
+    delete: (req, res) => {
+      model.findOneAndDelete({ _id: req.params.id })
+        .exec()
+        .then(deletedItem => res.send(deletedItem))
         .catch(res.send)
     }
   }
