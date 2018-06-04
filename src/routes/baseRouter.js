@@ -3,9 +3,8 @@ import { xprod, omit } from 'ramda'
 
 const router = express.Router()
 
-const routeNames = ['/snippet/(:id)?']
+const routeNames = ['/snippet/(:id)?', '/document/(:id)?']
 const httpVerbs = ['get', 'put', 'post', 'delete']
-// const bodyVerbs = ['post']
 
 // const importer = async (modelName) => await import(`../models/${modelName}`)
 

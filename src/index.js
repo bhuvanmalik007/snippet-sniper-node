@@ -4,7 +4,7 @@ import indexRouter from './routes/index'
 import serverConfig from './serverconfig'
 import attachAppWithMongoose from './utils/attachAppWithMongoose'
 import jwtcheckr from './utils/authentication'
-import modelRouter from './routes/snippetRouter'
+import baseRouter from './routes/baseRouter'
 
 import { binder } from '@elementary/proper'
 
@@ -21,7 +21,7 @@ binder()
   .add(use('/', indexRouter))
   .add(use(jwtcheckr))
   .add(use('/ty', (_, res) => res.send('Verified')))
-  .add(use('/auth', modelRouter))
+  .add(use('/auth', baseRouter))
   .invoke(app) // fold
 
 // catch 404 and forward to error handler
