@@ -19,9 +19,10 @@ const middleWareSpitter = (child, Resolver, method) => parentMapper[child] ?
 
 function Resolver(model) {
   return {
-    get: (req, res) => {model.findById(req.params.id)
+    get: (req, res) => model.findById(req.params.id)
       .populate(invertObj(parentMapper)[req.path.split('/')[1]] + 's')
-      .then(x => res.send(x)).catch(res.send)},
+      .then(x => res.send(x))
+      .catch(res.send),
     post: (req, res, next) => {
       const item = new model(req.body)
       item.save()
@@ -49,10 +50,23 @@ function Resolver(model) {
         })
         .catch(res.send)
     },
-    delete: (req, res) => {
+    delete: (req, res, next) => {
       model.findOneAndDelete({ _id: req.params.id })
         .exec()
-        .then(deletedItem => res.send(deletedItem))
+        .then(async deletedItem => {
+          if (req.body.parentId) {
+            const child = req.path.split('/')[1]
+            const doc = await require('../models/' + parentMapper[child] + 'Model.js')
+              .default
+              .findById(req.body.parentId)
+              .exec()
+            req.params.id = req.body.parentId
+            req.body = {}
+            req.body[child + 's'] = doc[child + 's'].filter(childId => childId != req.params.id)
+            next()
+          }
+          else res.send(deletedItem)
+        })
         .catch(res.send)
     }
   }
