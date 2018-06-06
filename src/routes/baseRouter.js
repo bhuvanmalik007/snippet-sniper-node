@@ -1,5 +1,5 @@
 import express from 'express'
-import { xprod, omit } from 'ramda'
+import { xprod, omit, invertObj } from 'ramda'
 
 const router = express.Router()
 
@@ -19,8 +19,9 @@ const middleWareSpitter = (child, Resolver, method) => parentMapper[child] ?
 
 function Resolver(model) {
   return {
-    get: (req, res) => model.findById(req.params.id)
-      .then(x => res.send(x)).catch(res.send),
+    get: (req, res) => {model.findById(req.params.id)
+      .populate(invertObj(parentMapper)[req.path.split('/')[1]] + 's')
+      .then(x => res.send(x)).catch(res.send)},
     post: (req, res, next) => {
       const item = new model(req.body)
       item.save()
