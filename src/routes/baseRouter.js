@@ -28,14 +28,14 @@ function Resolver(model) {
       item.save()
         .then(async savedItem => {
           if (req.body.parentId) {
-            const child = req.path.split('/')[1]
-            const doc = await require('../models/' + parentMapper[child] + 'Model.js')
+            const childName = req.path.split('/')[1]
+            const parentModel = await require('../models/' + parentMapper[childName] + 'Model.js')
               .default
               .findById(req.body.parentId)
               .exec()
             req.params.id = req.body.parentId
             req.body = {}
-            req.body[child + 's'] = [...doc[child + 's'], savedItem._id]
+            req.body[childName + 's'] = [...parentModel[childName + 's'], savedItem._id]
             next()
           }
           else res.send(savedItem)
@@ -55,14 +55,14 @@ function Resolver(model) {
         .exec()
         .then(async deletedItem => {
           if (req.body.parentId) {
-            const child = req.path.split('/')[1]
-            const doc = await require('../models/' + parentMapper[child] + 'Model.js')
+            const childName = req.path.split('/')[1]
+            const parentModel = await require('../models/' + parentMapper[childName] + 'Model.js')
               .default
               .findById(req.body.parentId)
               .exec()
             req.params.id = req.body.parentId
             req.body = {}
-            req.body[child + 's'] = doc[child + 's'].filter(childId => childId != req.params.id)
+            req.body[childName + 's'] = parentModel[childName + 's'].filter(childId => childId != req.params.id)
             next()
           }
           else res.send(deletedItem)
