@@ -2,6 +2,9 @@ import express from 'express'
 import { xprod, omit, invertObj } from 'ramda'
 // import { fchmodSync } from 'fs'
 
+// Folder: 5b191da63c7e6e0b55ceaa23
+// Document: 5b1921363c7e6e0b55ceaa24
+
 const router = express.Router()
 
 const routeNames = ['/snippet/(:id)?', '/document/(:id)?', '/folder/(:id)?']
@@ -24,13 +27,12 @@ const Resolver = route => model => {
     },
     put: (id, entity) =>
       model.findOneAndUpdate({ _id: id }, omit(['createdAt', 'updatedAt'], entity), { new: true })
-        .exec()
         .catch(err => console.log(err))
     ,
     delete: id =>
       model.findOneAndDelete({ _id: id })
-        .exec()
-        .then(async () => id)
+        // .exec()
+        .then(() => id)
         .catch(err => console.log(err))
   }
 }
@@ -46,6 +48,7 @@ const checkParent = route => (req, _, next) => {
 }
 
 const resolveResolver = (route, method, model) => (req, _, next) => {
+  console.log('sdfsdfs')
   if (req.parent && (method === 'post' || method === 'delete')) {
     Resolver(route)(model)[method](req.params.id, req.body)
       .then(async childId => {
