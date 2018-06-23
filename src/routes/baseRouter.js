@@ -1,5 +1,6 @@
 import express from 'express'
 import { xprod, omit, invertObj } from 'ramda'
+// import { fchmodSync } from 'fs'
 
 const router = express.Router()
 
@@ -21,17 +22,16 @@ const Resolver = route => model => {
         .then(savedItem => savedItem._id)
         .catch(err => console.log(err))
     },
-    put: (id, entity) => {
-      return model.findOneAndUpdate({ _id: id }, omit(['createdAt', 'updatedAt'], entity), { new: true })
+    put: (id, entity) =>
+      model.findOneAndUpdate({ _id: id }, omit(['createdAt', 'updatedAt'], entity), { new: true })
         .exec()
         .catch(err => console.log(err))
-    },
-    delete: id => {
-      return model.findOneAndDelete({ _id: id })
+    ,
+    delete: id =>
+      model.findOneAndDelete({ _id: id })
         .exec()
-        .then(async deletedItem => deletedItem._id)
+        .then(async () => id)
         .catch(err => console.log(err))
-    }
   }
 }
 
@@ -46,20 +46,36 @@ const checkParent = route => (req, _, next) => {
 }
 
 const resolveResolver = (route, method, model) => (req, _, next) => {
-  const fn = (req.parent && method === 'post' || method === 'delete')
-    ?
-    Resolver(route)(model)[method](req.params.id, req.body).then(x =>
-      Resolver(route)((require('../models/' + parentMapper[route] + 'Model.js').default)['put'](x))
+  if (req.parent && (method === 'post' || method === 'delete')) {
+    Resolver(route)(model)[method](req.params.id, req.body).then(async childId => {
+      // Create entity payload here
+      console.log('childId: ' + childId)
+      const parentModel = await require('../models/' + parentMapper[route] + 'Model.js').default
+      const parentObj = await parentModel.findById(req.body.parentId).exec()
+      console.log('parentObj: ' + parentObj)
+      if (method === 'post') {
+        parentObj[route + 's'] = [...parentObj[route + 's'], childId]
+      }
+      else {
+        parentObj[route + 's'] = parentObj[route + 's'].filter(childId => childId != req.params.id)
+      }
+
+      return Resolver(route)(parentModel)['put'](req.body.parentId, parentObj)
+    }
     )
       .then(x => {
         req.result = x
         next()
       })
-    :
+  }
+  else {
+    console.log(req.params.id)
     Resolver(route)(model)[method](req.params.id, req.body).then(x => {
+      console.log(x)
       req.result = x
       next()
     })
+  }
 }
 
 const responseContructor = (req, res) => req.error ? res.send('failed') : res.send(req.result)
@@ -67,8 +83,8 @@ const responseContructor = (req, res) => req.error ? res.send('failed') : res.se
 xprod(routeNames, httpVerbs)
   .map(combo =>
     router[combo.last()](combo.first(),  // route path,
-      checkParent(combo[0].split('/')[1])
-      , resolveResolver(combo[0].split('/')[1], combo[1], require('../models/' + combo[0].split('/')[1] + 'Model.js').default) // middleware array
+      checkParent(combo[0].split('/')[1]), // attach req.parent
+      resolveResolver(combo[0].split('/')[1], combo[1], require('../models/' + combo[0].split('/')[1] + 'Model.js').default)
       // , createdefaultdocument()
       , responseContructor
     ))
