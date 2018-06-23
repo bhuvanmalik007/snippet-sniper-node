@@ -47,22 +47,21 @@ const checkParent = route => (req, _, next) => {
 
 const resolveResolver = (route, method, model) => (req, _, next) => {
   if (req.parent && (method === 'post' || method === 'delete')) {
-    Resolver(route)(model)[method](req.params.id, req.body).then(async childId => {
-      // Create entity payload here
-      console.log('childId: ' + childId)
-      const parentModel = await require('../models/' + parentMapper[route] + 'Model.js').default
-      const parentObj = await parentModel.findById(req.body.parentId).exec()
-      console.log('parentObj: ' + parentObj)
-      if (method === 'post') {
-        parentObj[route + 's'] = [...parentObj[route + 's'], childId]
-      }
-      else {
-        parentObj[route + 's'] = parentObj[route + 's'].filter(childId => childId != req.params.id)
-      }
-
-      return Resolver(route)(parentModel)['put'](req.body.parentId, parentObj)
-    }
-    )
+    Resolver(route)(model)[method](req.params.id, req.body)
+      .then(async childId => {
+        // Create entity payload here
+        console.log('childId: ' + childId)
+        const parentModel = await require('../models/' + parentMapper[route] + 'Model.js').default
+        const parentObj = await parentModel.findById(req.body.parentId).exec()
+        console.log('parentObj: ' + parentObj)
+        if (method === 'post') {
+          parentObj[route + 's'] = [...parentObj[route + 's'], childId]
+        }
+        else {
+          parentObj[route + 's'] = parentObj[route + 's'].filter(childId => childId != req.params.id)
+        }
+        return Resolver(route)(parentModel)['put'](req.body.parentId, parentObj) // Promise
+      })
       .then(x => {
         req.result = x
         next()
