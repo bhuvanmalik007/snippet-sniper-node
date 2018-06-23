@@ -6,7 +6,7 @@ const jwtcheckr = async (req, res, next) => {
     res.send({ 'boo': 'No Token' })
   }
   try {
-    await jwtverifyPromise(req.headers['authorization'].split(' ')[1])
+    req.user = await jwtverifyPromise(req.headers['authorization'].split(' ')[1])
     next()
   } catch (e) {
     res.send({ 'boo': 'Authentication Failed' })

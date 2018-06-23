@@ -3,6 +3,7 @@ import express from 'express'
 import indexRouter from './routes/index'
 import serverConfig from './serverconfig'
 import attachAppWithMongoose from './utils/attachAppWithMongoose'
+// import upgradeResponse from './utils/attachResponseObjectToApp'
 import jwtcheckr from './utils/authentication'
 import baseRouter from './routes/baseRouter'
 
@@ -18,6 +19,7 @@ const use = (...args) => app => app.use(...args)
 
 binder()
   .add(attachAppWithMongoose)
+  // .add(upgradeResponse)
   .add(use('/', indexRouter))
   .add(use(jwtcheckr))
   .add(use('/ty', (_, res) => res.send('Verified')))

@@ -10,72 +10,67 @@ const parentMapper = {
   document: 'folder'
 }
 
-const middleWareSpitter = (child, Resolver, method) => parentMapper[child] ?
-  [
-    Resolver(require('../models/' + child + 'Model.js').default)[method],
-    Resolver(require('../models/' + parentMapper[child] + 'Model.js').default).put
-  ]
-  :
-  Resolver(require('../models/' + child + 'Model.js').default)[method]
-
-function Resolver(model) {
+const Resolver = route => model => {
   return {
-    get: (req, res) => model.findById(req.params.id)
-      .populate(invertObj(parentMapper)[req.path.split('/')[1]] + 's')
-      .then(x => res.send(x))
-      .catch(res.send),
-    post: (req, res, next) => {
-      const item = new model(req.body)
-      item.save()
-        .then(async savedItem => {
-          if (req.body.parentId) {
-            const childName = req.path.split('/')[1]
-            const parentModel = await require('../models/' + parentMapper[childName] + 'Model.js')
-              .default
-              .findById(req.body.parentId)
-              .exec()
-            req.params.id = req.body.parentId
-            req.body = {}
-            req.body[childName + 's'] = [...parentModel[childName + 's'], savedItem._id]
-            next()
-          }
-          else res.send(savedItem)
-        })
-        .catch(res.send)
+    get: id => model.findById(id)
+      .populate(invertObj(parentMapper)[route] + 's')
+      .catch(err => console.log(err)),
+    post: (_, entity) => {
+      const item = new model(entity)
+      return item.save()
+        .then(savedItem => savedItem._id)
+        .catch(err => console.log(err))
     },
-    put: (req, res) => {
-      model.findOneAndUpdate({ _id: req.params.id }, omit(['createdAt', 'updatedAt'], req.body), { new: true })
+    put: (id, entity) => {
+      return model.findOneAndUpdate({ _id: id }, omit(['createdAt', 'updatedAt'], entity), { new: true })
         .exec()
-        .then(item => {
-          res.send(item)
-        })
-        .catch(res.send)
+        .catch(err => console.log(err))
     },
-    delete: (req, res, next) => {
-      model.findOneAndDelete({ _id: req.params.id })
+    delete: id => {
+      return model.findOneAndDelete({ _id: id })
         .exec()
-        .then(async deletedItem => {
-          if (req.body.parentId) {
-            const childName = req.path.split('/')[1]
-            const parentModel = await require('../models/' + parentMapper[childName] + 'Model.js')
-              .default
-              .findById(req.body.parentId)
-              .exec()
-            req.params.id = req.body.parentId
-            req.body = {}
-            req.body[childName + 's'] = parentModel[childName + 's'].filter(childId => childId != req.params.id)
-            next()
-          }
-          else res.send(deletedItem)
-        })
-        .catch(res.send)
+        .then(async deletedItem => deletedItem._id)
+        .catch(err => console.log(err))
     }
   }
 }
 
-xprod(routeNames, httpVerbs).map(combo =>
-  router[combo[1]](combo[0],  // route path,
-    middleWareSpitter(combo[0].split('/')[1], Resolver, combo[1]) // middleware array
-  ))
+const checkParent = route => (req, _, next) => {
+  if (parentMapper[route]) {
+    req.parent = true
+    next()
+    return
+  }
+  req.parent = false
+  next()
+}
+
+const resolveResolver = (route, method, model) => (req, _, next) => {
+  const fn = (req.parent && method === 'post' || method === 'delete')
+    ?
+    Resolver(route)(model)[method](req.params.id, req.body).then(x =>
+      Resolver(route)((require('../models/' + parentMapper[route] + 'Model.js').default)['put'](x))
+    )
+      .then(x => {
+        req.result = x
+        next()
+      })
+    :
+    Resolver(route)(model)[method](req.params.id, req.body).then(x => {
+      req.result = x
+      next()
+    })
+}
+
+const responseContructor = (req, res) => req.error ? res.send('failed') : res.send(req.result)
+
+xprod(routeNames, httpVerbs)
+  .map(combo =>
+    router[combo.last()](combo.first(),  // route path,
+      checkParent(combo[0].split('/')[1])
+      , resolveResolver(combo[0].split('/')[1], combo[1], require('../models/' + combo[0].split('/')[1] + 'Model.js').default) // middleware array
+      // , createdefaultdocument()
+      , responseContructor
+    ))
 
 export default router
