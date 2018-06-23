@@ -4,6 +4,7 @@ import { xprod, omit, invertObj } from 'ramda'
 
 // Folder: 5b191da63c7e6e0b55ceaa23
 // Document: 5b1921363c7e6e0b55ceaa24
+//           5b2e945888b506200a84f417
 
 const router = express.Router()
 
@@ -31,7 +32,6 @@ const Resolver = route => model => {
     ,
     delete: id =>
       model.findOneAndDelete({ _id: id })
-        // .exec()
         .then(() => id)
         .catch(err => console.log(err))
   }
@@ -48,21 +48,20 @@ const checkParent = route => (req, _, next) => {
 }
 
 const resolveResolver = (route, method, model) => (req, _, next) => {
-  console.log('sdfsdfs')
   if (req.parent && (method === 'post' || method === 'delete')) {
     Resolver(route)(model)[method](req.params.id, req.body)
       .then(async childId => {
-        // Create entity payload here
-        console.log('childId: ' + childId)
+        // Create payload for parent here
         const parentModel = await require('../models/' + parentMapper[route] + 'Model.js').default
         const parentObj = await parentModel.findById(req.body.parentId).exec()
-        console.log('parentObj: ' + parentObj)
+        // Handle POST and DELETE
         if (method === 'post') {
           parentObj[route + 's'] = [...parentObj[route + 's'], childId]
         }
         else {
           parentObj[route + 's'] = parentObj[route + 's'].filter(childId => childId != req.params.id)
         }
+        // PUT in parent
         return Resolver(route)(parentModel)['put'](req.body.parentId, parentObj) // Promise
       })
       .then(x => {
@@ -71,7 +70,6 @@ const resolveResolver = (route, method, model) => (req, _, next) => {
       })
   }
   else {
-    console.log(req.params.id)
     Resolver(route)(model)[method](req.params.id, req.body).then(x => {
       console.log(x)
       req.result = x
@@ -84,7 +82,8 @@ const responseContructor = (req, res) => req.error ? res.send('failed') : res.se
 
 xprod(routeNames, httpVerbs)
   .map(combo =>
-    router[combo.last()](combo.first(),  // route path,
+    router[combo.last()](combo.first(),  // route path
+      // All route middlewares here
       checkParent(combo[0].split('/')[1]), // attach req.parent
       resolveResolver(combo[0].split('/')[1], combo[1], require('../models/' + combo[0].split('/')[1] + 'Model.js').default)
       // , createdefaultdocument()
