@@ -23,7 +23,8 @@
     "http-errors": "1.6.2",
     "jsonwebtoken": "^7.4.1",
     "mongoose": "^5.1.0",
-    "ramda": "^0.25.0"
+    "ramda": "^0.25.0",
+    "request": "^2.87.0"
   },
   "devDependencies": {
     "@lectro/core": "^1.1.2-alpha-9",

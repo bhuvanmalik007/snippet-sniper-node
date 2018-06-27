@@ -8,6 +8,7 @@ import jwtcheckr from './utils/authentication'
 import baseRouter from './routes/baseRouter'
 
 import { binder } from '@elementary/proper'
+import loginResponse from './utils/loginResponse'
 
 const app = express()
 
@@ -22,6 +23,7 @@ binder()
   // .add(upgradeResponse)
   .add(use('/', indexRouter))
   .add(use(jwtcheckr))
+  .add(use(loginResponse))
   .add(use('/ty', (_, res) => res.send('Verified')))
   .add(use('/auth', baseRouter))
   .invoke(app) // fold

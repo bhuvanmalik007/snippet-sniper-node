@@ -4,7 +4,7 @@ import { xprod, omit, invertObj } from 'ramda'
 
 // Folder: 5b191da63c7e6e0b55ceaa23
 // Document: 5b1921363c7e6e0b55ceaa24
-//           5b2e945888b506200a84f417
+//
 
 const router = express.Router()
 
