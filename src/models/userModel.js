@@ -4,6 +4,7 @@ import mongoose from 'mongoose'
 const userModel = {
   given_name: String,
   family_name: String,
+  sub: String,
   nickname: String,
   name: String,
   picture: String,
