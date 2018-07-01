@@ -71,7 +71,6 @@ const resolveResolver = (route, method, model) => (req, _, next) => {
   }
   else {
     Resolver(route)(model)[method](req.params.id, req.body).then(x => {
-      console.log(x)
       req.result = x
       next()
     })
