@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken'
+import { pick } from 'ramda'
 const publicKey = process.env.NODE_ENV === 'development' ? require('../../secrets') : process.env.PUBLICKEY
 
 const jwtcheckr = async (req, res, next) => {
@@ -6,7 +7,10 @@ const jwtcheckr = async (req, res, next) => {
     res.send({ 'boo': 'No Token' })
   }
   try {
-    req.user = await jwtverifyPromise(req.headers['authorization'].split(' ')[1])
+    const userObj = await jwtverifyPromise(req.headers['authorization'].split(' ')[1])
+    req.user = pick(['given_name', 'family_name', 'nickname', 'name', 'picture', 'gender', 'email', 'sub'], userObj)
+    req.user.sub = req.user.sub.split('|')[1]
+    // console.log(req.user)
     next()
   } catch (e) {
     res.send({ 'boo': 'Authentication Failed' })

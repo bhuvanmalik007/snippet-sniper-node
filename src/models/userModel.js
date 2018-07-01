@@ -9,6 +9,7 @@ const userModel = {
   name: String,
   picture: String,
   email: String,
+  gender: String,
   documents: [{ type: mongoose.Schema.Types.ObjectId, ref: 'folder' }]
 }
 

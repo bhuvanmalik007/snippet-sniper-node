@@ -1,14 +1,20 @@
 import user from '../models/userModel'
 
 export default (req, res) => {
-  const reqId = req.user.sub.split('|')[1]
-  user.findOne({ sub: reqId })
+  user.findOne({ sub: req.user.sub })
     .then(userObj => {
-      if(userObj){
+      if (userObj) {
+        console.log('User exists')
         res.send(userObj)
         return
       }
-      res.send({message: 'user not found'})
+      console.log('skdjfhskdjfhs')
+      const newUser = new user(req.user)
+      newUser.save()
+        .then(newUser => {
+          console.log('New user created')
+          res.send(newUser)
+        })
     })
     .catch(e => console.log(e))
 
