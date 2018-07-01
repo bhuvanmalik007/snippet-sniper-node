@@ -8,7 +8,6 @@ export default (req, res) => {
         res.send(userObj)
         return
       }
-      console.log('skdjfhskdjfhs')
       const newUser = new user(req.user)
       newUser.save()
         .then(newUser => {
@@ -17,5 +16,4 @@ export default (req, res) => {
         })
     })
     .catch(e => console.log(e))
-
 }
