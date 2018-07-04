@@ -2,6 +2,15 @@ import user from '../models/userModel'
 
 export default (req, res) => {
   user.findOne({ sub: req.user.sub })
+    .populate(({
+      path: 'folders',
+      populate: {
+        path: 'documents',
+        populate: {
+          path: 'snippets'
+        }
+      }
+    }))
     .then(userObj => {
       if (userObj) {
         console.log('User exists')

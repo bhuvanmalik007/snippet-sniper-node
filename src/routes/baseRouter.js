@@ -18,7 +18,9 @@ const parentMapper = {
 const Resolver = route => model => {
   return {
     get: id => model.findById(id)
+      // .populate(({ path: 'documents', populate: {path:'snippets'}}))
       .populate(invertObj(parentMapper)[route] + 's')
+      // .populate('snippets')
       .catch(err => console.log(err)),
     post: (_, entity) => {
       const item = new model(entity)
