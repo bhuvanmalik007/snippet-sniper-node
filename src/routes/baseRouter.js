@@ -8,11 +8,12 @@ import { xprod, omit, invertObj } from 'ramda'
 
 const router = express.Router()
 
-const routeNames = ['/snippet/(:id)?', '/document/(:id)?', '/folder/(:id)?']
+const routeNames = ['/snippet/(:id)?', '/document/(:id)?', '/folder/(:id)?', '/user/(:id)?']
 const httpVerbs = ['get', 'put', 'post', 'delete']
 const parentMapper = {
   snippet: 'document',
-  document: 'folder'
+  document: 'folder',
+  folder: 'user'
 }
 
 const Resolver = route => model => {

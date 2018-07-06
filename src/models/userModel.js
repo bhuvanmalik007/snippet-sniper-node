@@ -10,7 +10,7 @@ const userModel = {
   picture: String,
   email: String,
   gender: String,
-  documents: [{ type: mongoose.Schema.Types.ObjectId, ref: 'folder' }]
+  folders: [{ type: mongoose.Schema.Types.ObjectId, ref: 'folder' }]
 }
 
 export default roleModel(userModel, 'user').fold()

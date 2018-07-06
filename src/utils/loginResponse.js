@@ -1,4 +1,5 @@
 import user from '../models/userModel'
+import folderModel from '../models/folderModel'
 
 export default (req, res) => {
   user.findOne({ sub: req.user.sub })
@@ -11,18 +12,22 @@ export default (req, res) => {
         }
       }
     }))
-    .then(userObj => {
+    .then(async userObj => {
       if (userObj) {
         console.log('User exists')
         res.send(userObj)
         return
       }
-      const newUser = new user(req.user)
-      newUser.save()
-        .then(newUser => {
-          console.log('New user created')
-          res.send(newUser)
-        })
+      const rootFolder = new folderModel({
+        documents: [],
+        name: 'root',
+        starred: false
+      })
+      const savedRootFolder = await rootFolder.save()
+      const newUser = new user({...req.user, folders: [savedRootFolder._id]})
+      const savedNewUser = await newUser.save()
+      console.log('New user created')
+      res.send(savedNewUser)
     })
     .catch(e => console.log(e))
 }
