@@ -3,12 +3,11 @@ import express from 'express'
 import indexRouter from './routes/index'
 import serverConfig from './serverconfig'
 import attachAppWithMongoose from './utils/attachAppWithMongoose'
-// import upgradeResponse from './utils/attachResponseObjectToApp'
 import jwtcheckr from './utils/authentication'
 import baseRouter from './routes/baseRouter'
 
 import { binder } from '@elementary/proper'
-import loginResponse from './utils/loginResponse'
+import loginResponse from './routes/loginResponse'
 
 const app = express()
 
@@ -20,7 +19,6 @@ const use = (...args) => app => app.use(...args)
 
 binder()
   .add(attachAppWithMongoose)
-  // .add(upgradeResponse)
   .add(use('/', indexRouter))
   .add(use(jwtcheckr))
   .add(use('/userdata', loginResponse))

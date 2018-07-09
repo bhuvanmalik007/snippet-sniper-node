@@ -24,7 +24,7 @@ export default (req, res) => {
         starred: false
       })
       const savedRootFolder = await rootFolder.save()
-      const newUser = new user({...req.user, folders: [savedRootFolder._id]})
+      const newUser = new user({ ...req.user, folders: [savedRootFolder._id] })
       const savedNewUser = await newUser.save()
       console.log('New user created')
       res.send(savedNewUser)
