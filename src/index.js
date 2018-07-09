@@ -23,7 +23,7 @@ binder()
   // .add(upgradeResponse)
   .add(use('/', indexRouter))
   .add(use(jwtcheckr))
-  .add(use('/login', loginResponse))
+  .add(use('/userdata', loginResponse))
   .add(use('/ty', (_, res) => res.send('Verified')))
   .add(use('/auth', baseRouter))
   .invoke(app) // fold
