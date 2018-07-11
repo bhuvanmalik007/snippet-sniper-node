@@ -24,6 +24,7 @@ binder()
   .add(use('/userdata', loginResponse))
   .add(use('/ty', (_, res) => res.send('Verified')))
   .add(use('/auth', baseRouter))
+  .add(use('*', () => console.log('not found')))
   .invoke(app) // fold
 
 // catch 404 and forward to error handler
